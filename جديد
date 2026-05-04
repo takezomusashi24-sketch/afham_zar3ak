@@ -1,0 +1,1426 @@
+lib/main.dartimport
+'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'screens/home_screen.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(const AfhamZar3akApp());
+}
+
+class AfhamZar3akApp extends StatelessWidget {
+  const AfhamZar3akApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'افهم زرعك',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2E7D32),
+          primary: const Color(0xFF2E7D32),
+          secondary: const Color(0xFF66BB6A),
+          surface: const Color(0xFFF1F8E9),
+        ),
+        useMaterial3: true,
+        fontFamily: 'Cairo',
+      ),
+      home: const HomeScreen(),
+      builder: (context, child) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: child!,
+        );
+      },
+    );
+  }
+lib/screens/home_screen.dart
+import 'package:flutter/material.dart';
+import 'diagnose_screen.dart';
+import 'basics_screen.dart';
+import 'mistakes_screen.dart';
+import 'plant_now_screen.dart';
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F8E9),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 20),
+              _buildHeader(),
+              const SizedBox(height: 36),
+              _buildMainButton(
+                context,
+                emoji: '🔍',
+                title: 'تشخيص نبتتك',
+                subtitle: 'اكتشف ما تعاني منه نبتتك',
+                color: const Color(0xFF2E7D32),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const DiagnoseScreen())),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildSmallButton(
+                      context,
+                      emoji: '📚',
+                      title: 'تعلم الأساسيات',
+                      color: const Color(0xFF388E3C),
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const BasicsScreen())),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildSmallButton(
+                      context,
+                      emoji: '⚠️',
+                      title: 'أخطاء قاتلة',
+                      color: const Color(0xFFC62828),
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const MistakesScreen())),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildMainButton(
+                context,
+                emoji: '🌱',
+                title: 'ماذا تزرع الآن؟',
+                subtitle: 'نباتات مناسبة لهذا الموسم',
+                color: const Color(0xFF558B2F),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const PlantNowScreen())),
+              ),
+              const SizedBox(height: 30),
+              _buildTip(),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: const Color(0xFF2E7D32),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF2E7D32).withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: const Center(
+            child: Text('🌿', style: TextStyle(fontSize: 40)),
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'افهم زرعك',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1B5E20),
+            letterSpacing: 1,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'رفيقك في رعاية النباتات 🌱',
+          style: TextStyle(
+            fontSize: 15,
+            color: Color(0xFF558B2F),
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMainButton(
+    BuildContext context, {
+    required String emoji,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 22),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.35),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 36)),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white.withOpacity(0.85),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSmallButton(
+    BuildContext context, {
+    required String emoji,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.35),
+              blurRadius: 14,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 32)),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTip() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF81C784), width: 1.5),
+      ),
+      child: const Row(
+        children: [
+          Text('💡', style: TextStyle(fontSize: 24)),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'نصيحة اليوم: معظم النباتات تموت من الإفراط في السقي وليس من النسيان!',
+              style: TextStyle(
+                fontSize: 13,
+                color: Color(0xFF2E7D32),
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+lib/screens/diagnose_screen.dart
+import 'package:flutter/material.dart';
+import '../data/diagnosis_data.dart';
+
+class DiagnoseScreen extends StatefulWidget {
+  const DiagnoseScreen({super.key});
+
+  @override
+  State<DiagnoseScreen> createState() => _DiagnoseScreenState();
+}
+
+class _DiagnoseScreenState extends State<DiagnoseScreen>
+    with SingleTickerProviderStateMixin {
+  String _currentQuestionId = 'start';
+  DiagnosisResult? _result;
+  final List<String> _breadcrumb = [];
+  late AnimationController _animController;
+  late Animation<double> _fadeAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeIn);
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
+
+  void _onOptionTap(DiagnosisOption option) {
+    _animController.reverse().then((_) {
+      setState(() {
+        _breadcrumb.add(_currentQuestionId);
+        if (option.result != null) {
+          _result = option.result;
+        } else if (option.nextQuestionId != null) {
+          _currentQuestionId = option.nextQuestionId!;
+        }
+      });
+      _animController.forward();
+    });
+  }
+
+  void _goBack() {
+    if (_breadcrumb.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+    _animController.reverse().then((_) {
+      setState(() {
+        _result = null;
+        _currentQuestionId = _breadcrumb.removeLast();
+      });
+      _animController.forward();
+    });
+  }
+
+  void _restart() {
+    _animController.reverse().then((_) {
+      setState(() {
+        _currentQuestionId = 'start';
+        _result = null;
+        _breadcrumb.clear();
+      });
+      _animController.forward();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F8E9),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF2E7D32),
+        foregroundColor: Colors.white,
+        title: const Text(
+          'تشخيص نبتتك',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_forward_ios),
+          onPressed: _goBack,
+        ),
+        elevation: 0,
+      ),
+      body: FadeTransition(
+        opacity: _fadeAnim,
+        child: _result != null
+            ? _buildResult(_result!)
+            : _buildQuestion(diagnosisTree[_currentQuestionId]!),
+      ),
+    );
+  }
+
+  Widget _buildQuestion(DiagnosisQuestion question) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_breadcrumb.isNotEmpty) _buildProgressBar(),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.all(22),
+            decoration: BoxDecoration(
+              color: const Color(0xFF2E7D32),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF2E7D32).withOpacity(0.3),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                const Text('❓', style: TextStyle(fontSize: 40)),
+                const SizedBox(height: 12),
+                Text(
+                  question.question,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'اختر الإجابة الأقرب لحالتك:',
+            style: TextStyle(
+              fontSize: 15,
+              color: Color(0xFF558B2F),
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ...question.options.map((option) => _buildOptionButton(option)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionButton(DiagnosisOption option) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GestureDetector(
+        onTap: () => _onOptionTap(option),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF81C784), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  option.label,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    color: Color(0xFF1B5E20),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Icon(Icons.arrow_back_ios_new,
+                  color: Color(0xFF66BB6A), size: 16),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProgressBar() {
+    return Row(
+      children: [
+        const Text('التقدم: ', style: TextStyle(color: Color(0xFF558B2F), fontSize: 13)),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: _breadcrumb.length / 4.0,
+              backgroundColor: const Color(0xFFC8E6C9),
+              color: const Color(0xFF2E7D32),
+              minHeight: 8,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildResult(DiagnosisResult result) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Result header
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF1B5E20), Color(0xFF2E7D32)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF2E7D32).withOpacity(0.4),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Text(result.emoji, style: const TextStyle(fontSize: 56)),
+                const SizedBox(height: 12),
+                const Text(
+                  '🔍 التشخيص',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  result.title,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          // Reason
+          _buildCard(
+            icon: '💡',
+            title: 'السبب',
+            child: Text(
+              result.reason,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Color(0xFF37474F),
+                height: 1.7,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Solution
+          _buildCard(
+            icon: '✅',
+            title: 'الحل خطوة بخطوة',
+            child: Column(
+              children: result.solution.asMap().entries.map((entry) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF2E7D32),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${entry.key + 1}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          entry.value,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF37474F),
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Action buttons
+          ElevatedButton.icon(
+            onPressed: _restart,
+            icon: const Icon(Icons.refresh),
+            label: const Text('تشخيص مشكلة أخرى',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2E7D32),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
+            ),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.home_outlined),
+            label: const Text('الرئيسية',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF2E7D32),
+              side: const BorderSide(color: Color(0xFF2E7D32), width: 1.5),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCard({
+    required String icon,
+    required String title,
+    required Widget child,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(icon, style: const TextStyle(fontSize: 22)),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1B5E20),
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 20, color: Color(0xFFE8F5E9)),
+          child,
+        ],
+      ),
+    );
+  }
+}
+lib/screens/basics_screen.dar
+import 'package:flutter/material.dart';
+
+class _Tip {
+  final String emoji;
+  final String title;
+  final String body;
+  const _Tip(this.emoji, this.title, this.body);
+}
+
+const _tips = [
+  _Tip('💧', 'السقي الصحيح',
+      'اسقِ عندما تجف التربة السطحية ٢-٣ سم. معظم النباتات تموت من كثرة الماء لا من قلته. تحقق دائماً بإدخال إصبعك في التربة.'),
+  _Tip('☀️', 'الضوء المناسب',
+      'كل نبتة تحتاج كمية مختلفة من الضوء. النباتات الاستوائية تحب الضوء غير المباشر، أما الصواريخ والصبر فتحتاج شمساً مباشرة.'),
+  _Tip('🌱', 'التربة الجيدة',
+      'التربة الجيدة تكون خفيفة وجيدة التصريف. أضف البرلايت أو الرمل الخشن لتحسين التهوية ومنع تعفن الجذور.'),
+  _Tip('🪴', 'وقت نقل الأصيص',
+      'انقل النبتة لأصيص أكبر عندما ترى الجذور تخرج من ثقوب التصريف أو عندما يتوقف النمو. الربيع هو أفضل وقت.'),
+  _Tip('🌡️', 'درجة الحرارة',
+      'معظم النباتات المنزلية تحب ١٨-٢٦ درجة. تجنب وضعها قرب مكيفات الهواء أو مصادر الحرارة المباشرة.'),
+  _Tip('🌿', 'التسميد',
+      'سمّد نباتاتك مرة في الشهر في فصل النمو (ربيع وصيف). لا تسمّد في الشتاء عندما تكون النبتة في حالة راحة.'),
+];
+
+class BasicsScreen extends StatelessWidget {
+  const BasicsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F8E9),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF388E3C),
+        foregroundColor: Colors.white,
+        title: const Text('تعلم الأساسيات',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_forward_ios),
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 0,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _tips.length + 1,
+        itemBuilder: (context, i) {
+          if (i == 0) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF388E3C),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Text(
+                  '🌱 أساسيات النجاح مع النباتات',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+          final tip = _tips[i - 1];
+          return Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3)),
+              ],
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE8F5E9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                      child: Text(tip.emoji,
+                          style: const TextStyle(fontSize: 26))),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(tip.title,
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B5E20))),
+                      const SizedBox(height: 6),
+                      Text(tip.body,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF546E7A),
+                              height: 1.6)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+lib/screens/errors_screen.dart
+import 'package:flutter/material.dart';
+
+class _Mistake {
+  final String emoji;
+  final String title;
+  final String why;
+  final String fix;
+  const _Mistake(this.emoji, this.title, this.why, this.fix);
+}
+
+const _mistakes = [
+  _Mistake(
+    '💀',
+    'الإفراط في السقي',
+    'أكثر سبب وفاة للنباتات! الجذور تحتاج هواء، والتربة المبللة دائماً تخنقها وتسبب التعفن.',
+    'اسقِ فقط عندما تجف التربة السطحية. ضع إصبعك ٢ سم في التربة - إذا كانت رطبة، لا تسقِ.',
+  ),
+  _Mistake(
+    '🌑',
+    'وضع النبتة في الظلام',
+    'النباتات تصنع غذاءها من الضوء. بدون ضوء كافٍ تضعف وتصفر أوراقها ثم تموت ببطء.',
+    'ضع نباتاتك قرب النوافذ. حتى النباتات التي تتحمل الظل تحتاج لضوء غير مباشر.',
+  ),
+  _Mistake(
+    '🚫',
+    'نقل الأصيص في الشتاء',
+    'الشتاء هو وقت الراحة للنبات. نقله يسبب صدمة وإجهاداً حين يكون في أضعف حالاته.',
+    'انتظر الربيع دائماً لنقل النباتات. هذا يضمن تعافياً سريعاً وبداية نمو قوية.',
+  ),
+  _Mistake(
+    '🧪',
+    'الإفراط في التسميد',
+    'الزيادة في السماد تحرق الجذور وتسبب ما يسمى "حرق السماد" - علامته تحول أطراف الأوراق للبني.',
+    'اتبع التعليمات على العبوة، والأفضل تخفيف الجرعة لنصفها. أقل دائماً أفضل.',
+  ),
+  _Mistake(
+    '🌡️',
+    'وضعها قرب المكيف',
+    'الهواء البارد المباشر يسبب صدمة حرارية للنباتات الاستوائية ويجفف أوراقها.',
+    'ابعد النباتات مسافة ١-٢ متر على الأقل عن فتحات التكييف والمدافئ.',
+  ),
+  _Mistake(
+    '🪣',
+    'ترك الماء في الطبق',
+    'الطبق المملوء بالماء يجعل الجذور تجلس في الماء باستمرار مما يسبب تعفنها.',
+    'اسكب الماء الزائد من الطبق بعد ٣٠ دقيقة من السقي دائماً.',
+  ),
+];
+
+class MistakesScreen extends StatelessWidget {
+  const MistakesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFFFF8F8),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFFC62828),
+        foregroundColor: Colors.white,
+        title: const Text('أخطاء قاتلة',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_forward_ios),
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 0,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _mistakes.length + 1,
+        itemBuilder: (context, i) {
+          if (i == 0) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC62828),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Text(
+                  '⚠️ أخطاء تقتل نباتاتك بصمت',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+          final m = _mistakes[i - 1];
+          return Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3)),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 18, vertical: 14),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFFEBEE),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(16)),
+                  ),
+                  child: Row(
+                    children: [
+                      Text(m.emoji,
+                          style: const TextStyle(fontSize: 28)),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(m.title,
+                            style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFB71C1C))),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(children: [
+                        Icon(Icons.error_outline,
+                            color: Color(0xFFE53935), size: 16),
+                        SizedBox(width: 6),
+                        Text('لماذا خطر؟',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFE53935),
+                                fontSize: 13)),
+                      ]),
+                      const SizedBox(height: 4),
+                      Text(m.why,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF546E7A),
+                              height: 1.5)),
+                      const SizedBox(height: 12),
+                      const Row(children: [
+                        Icon(Icons.check_circle_outline,
+                            color: Color(0xFF2E7D32), size: 16),
+                        SizedBox(width: 6),
+                        Text('الحل:',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF2E7D32),
+                                fontSize: 13)),
+                      ]),
+                      const SizedBox(height: 4),
+                      Text(m.fix,
+                          style: const TextStyle(
+                              fontSize: 14,
+                              color: Color(0xFF546E7A),
+                              height: 1.5)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+lib/screens/plant_now_screen.dart
+import 'package:flutter/material.dart';
+
+class _Plant {
+  final String emoji;
+  final String name;
+  final String desc;
+  final String difficulty;
+  final Color diffColor;
+  const _Plant(this.emoji, this.name, this.desc, this.difficulty, this.diffColor);
+}
+
+const _springPlants = [
+  _Plant('🌿', 'النعناع', 'ينمو بسرعة ويحتاج ضوءاً جيداً وسقياً منتظماً. مثالي للشرفة.', 'سهل جداً', Color(0xFF2E7D32)),
+  _Plant('🌹', 'الورد', 'يحتاج شمساً مباشرة ٦ ساعات. الربيع هو أفضل وقت لزراعته.', 'متوسط', Color(0xFFF57C00)),
+  _Plant('🫑', 'الفلفل', 'نبتة منتجة رائعة للشرفات. تحتاج دفئاً وشمساً وسقياً منتظماً.', 'سهل', Color(0xFF388E3C)),
+  _Plant('🌻', 'عباد الشمس', 'ينمو بسرعة مذهلة ويحتاج شمساً مباشرة. مبهج ومميز.', 'سهل جداً', Color(0xFF2E7D32)),
+];
+
+const _allSeasonPlants = [
+  _Plant('🌵', 'الصبار', 'لا يحتاج تقريباً أي عناية. مثالي للمبتدئين.', 'سهل جداً', Color(0xFF2E7D32)),
+  _Plant('🪴', 'البوتس', 'نبتة خضراء جميلة تتحمل الإهمال وتنمو في أي ضوء.', 'سهل جداً', Color(0xFF2E7D32)),
+  _Plant('🌿', 'الألوفيرا', 'نبتة طبية رائعة. تحتاج ضوءاً جيداً وسقياً نادراً.', 'سهل جداً', Color(0xFF2E7D32)),
+  _Plant('🌱', 'السانسيفيريا', 'تتحمل الجفاف والظل. مثالية للداخل.', 'سهل جداً', Color(0xFF2E7D32)),
+];
+
+class PlantNowScreen extends StatelessWidget {
+  const PlantNowScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F8E9),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF558B2F),
+        foregroundColor: Colors.white,
+        title: const Text('ماذا تزرع الآن؟',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_forward_ios),
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 0,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          _sectionHeader('🌸 مناسبة للربيع والصيف'),
+          const SizedBox(height: 12),
+          ..._springPlants.map((p) => _buildPlantCard(p)),
+          const SizedBox(height: 8),
+          _sectionHeader('🌍 مناسبة طوال السنة'),
+          const SizedBox(height: 12),
+          ..._allSeasonPlants.map((p) => _buildPlantCard(p)),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF558B2F),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Text(
+              '💡 نصيحة: ابدأ بنبتة سهلة وابنِ ثقتك أولاً. النجاح مع نبتة واحدة أفضل من فشل مع عشر!',
+              style: TextStyle(color: Colors.white, fontSize: 14, height: 1.5),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF1B5E20),
+      ),
+    );
+  }
+
+  Widget _buildPlantCard(_Plant p) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 3)),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE8F5E9),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Center(
+                child: Text(p.emoji, style: const TextStyle(fontSize: 30))),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(p.name,
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B5E20))),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: p.diffColor.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(p.difficulty,
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: p.diffColor,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(p.desc,
+                    style: const TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF607D8B),
+                        height: 1.4)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }lib/data/diagnosis_data.dart
+class DiagnosisResult {
+  final String title;
+  final String reason;
+  final List<String> solution;
+  final String emoji;
+
+  const DiagnosisResult({
+    required this.title,
+    required this.reason,
+    required this.solution,
+    required this.emoji,
+  });
+}
+
+class DiagnosisQuestion {
+  final String question;
+  final List<DiagnosisOption> options;
+
+  const DiagnosisQuestion({
+    required this.question,
+    required this.options,
+  });
+}
+
+class DiagnosisOption {
+  final String label;
+  final String? nextQuestionId;
+  final DiagnosisResult? result;
+
+  const DiagnosisOption({
+    required this.label,
+    this.nextQuestionId,
+    this.result,
+  });
+}
+
+// ─── Decision Tree ───────────────────────────────────────────────────────────
+
+final Map<String, DiagnosisQuestion> diagnosisTree = {
+  'start': DiagnosisQuestion(
+    question: 'ما هي المشكلة التي تلاحظها على نبتتك؟',
+    options: [
+      DiagnosisOption(label: '🍂 أوراق صفراء', nextQuestionId: 'yellow'),
+      DiagnosisOption(label: '🥀 النبتة ذابلة', nextQuestionId: 'wilt'),
+      DiagnosisOption(label: '🔴 بقع على الأوراق', nextQuestionId: 'spots'),
+      DiagnosisOption(label: '🐌 نمو بطيء', nextQuestionId: 'slow'),
+    ],
+  ),
+
+  // ── Yellow Leaves ──────────────────────────────────────────────
+  'yellow': DiagnosisQuestion(
+    question: 'هل التربة مبللة جداً أو جافة جداً؟',
+    options: [
+      DiagnosisOption(label: '💧 مبللة جداً', nextQuestionId: 'yellow_wet'),
+      DiagnosisOption(label: '🏜️ جافة جداً', result: DiagnosisResult(
+        title: 'نقص الماء',
+        reason: 'النبتة تعاني من عطش! الجفاف يسبب اصفرار الأوراق وتساقطها.',
+        solution: [
+          'اسقِ النبتة فوراً بكمية معتدلة من الماء',
+          'تأكد من أن التربة رطبة وليست مشبعة بالماء',
+          'ضع روتيناً منتظماً للسقي (مرة كل ٢-٣ أيام صيفاً)',
+          'تحقق من أن الأصيص له ثقوب تصريف',
+        ],
+        emoji: '💧',
+      )),
+      DiagnosisOption(label: '👍 رطوبة مناسبة', nextQuestionId: 'yellow_light'),
+    ],
+  ),
+
+  'yellow_wet': DiagnosisQuestion(
+    question: 'هل جذور النبتة تبدو بنية أو سوداء اللون؟',
+    options: [
+      DiagnosisOption(label: '✅ نعم، جذور داكنة', result: DiagnosisResult(
+        title: 'تعفن الجذور',
+        reason: 'الإفراط في السقي أدى إلى تعفن الجذور، وهذا يمنع النبتة من امتصاص الغذاء.',
+        solution: [
+          'أوقف السقي فوراً لعدة أيام',
+          'أخرج النبتة من الأصيص وافحص الجذور',
+          'اقطع الجذور المتعفنة (البنية والطرية) بمقص معقم',
+          'أعد الزراعة في تربة جديدة جافة',
+          'انتظر أسبوعاً قبل السقي مجدداً',
+        ],
+        emoji: '🌱',
+      )),
+      DiagnosisOption(label: '❌ لا، جذور طبيعية', result: DiagnosisResult(
+        title: 'زيادة السقي',
+        reason: 'التربة المبللة دائماً تخنق الجذور وتمنع التنفس مما يصفر الأوراق.',
+        solution: [
+          'قلل كمية الماء بمقدار النصف',
+          'اسقِ فقط عندما تجف السطحية من التربة ٢-٣ سم',
+          'تأكد من وجود ثقوب تصريف في الأصيص',
+          'استخدم تربة خلطة جيدة التهوية',
+        ],
+        emoji: '🚿',
+      )),
+    ],
+  ),
+
+  'yellow_light': DiagnosisQuestion(
+    question: 'هل النبتة تحصل على ضوء شمس كافٍ؟',
+    options: [
+      DiagnosisOption(label: '🌑 ضوء قليل جداً', result: DiagnosisResult(
+        title: 'نقص الضوء',
+        reason: 'الضوء ضروري للبناء الضوئي. بدون ضوء كافٍ تفقد الأوراق لونها الأخضر.',
+        solution: [
+          'انقل النبتة لمكان أكثر إضاءة',
+          'ضعها قرب نافذة تطل على الشمال أو الشرق',
+          'إذا لم يتوفر ضوء طبيعي، استخدم مصباح نمو للنباتات',
+          'لا تضعها في ركن مظلم تماماً',
+        ],
+        emoji: '☀️',
+      )),
+      DiagnosisOption(label: '☀️ ضوء كافٍ', result: DiagnosisResult(
+        title: 'نقص العناصر الغذائية',
+        reason: 'الاصفرار مع الضوء والسقي الجيد يشير لنقص عناصر غذائية كالنيتروجين أو الحديد.',
+        solution: [
+          'أضف سماداً متوازناً مرة في الشهر',
+          'جرب سماداً يحتوي على الحديد والنيتروجين',
+          'يمكن استخدام سماد عضوي مثل سماد الدبال',
+          'تحقق من درجة حموضة التربة (pH يجب ٦-٧)',
+        ],
+        emoji: '🌿',
+      )),
+    ],
+  ),
+
+  // ── Wilting ────────────────────────────────────────────────────
+  'wilt': DiagnosisQuestion(
+    question: 'متى آخر مرة سقيت النبتة؟',
+    options: [
+      DiagnosisOption(label: '🕐 من أكثر من أسبوع', result: DiagnosisResult(
+        title: 'عطش شديد',
+        reason: 'النبتة في حالة إجهاد مائي حاد. فقدان المياه أدى لذبول الأوراق والساق.',
+        solution: [
+          'اسقِ النبتة فوراً بشكل غزير',
+          'ضع الأصيص في وعاء ماء لـ ٣٠ دقيقة ليمتص الماء من أسفل',
+          'رش الأوراق بالماء قليلاً',
+          'ضعها في مكان ظليل مؤقتاً لتتعافى',
+          'ضع تذكير منتظم للسقي',
+        ],
+        emoji: '💦',
+      )),
+      DiagnosisOption(label: '📅 سقيتها مؤخراً', nextQuestionId: 'wilt_recent'),
+    ],
+  ),
+
+  'wilt_recent': DiagnosisQuestion(
+    question: 'هل الجو حار جداً أو التربة تجف بسرعة؟',
+    options: [
+      DiagnosisOption(label: '🌡️ نعم، حر شديد', result: DiagnosisResult(
+        title: 'إجهاد حراري',
+        reason: 'الحرارة الشديدة تتبخر المياه بسرعة وتضغط على النبتة مما يسبب الذبول.',
+        solution: [
+          'انقل النبتة لمكان أكثر برودة وظلاً',
+          'زد تكرار السقي في الصيف',
+          'ضع طبقة من المالش (قش أو حجارة) فوق التربة للحفاظ على الرطوبة',
+          'رش الأوراق بالماء صباحاً',
+        ],
+        emoji: '🌡️',
+      )),
+      DiagnosisOption(label: '❌ لا، الجو معتدل', result: DiagnosisResult(
+        title: 'تعفن الجذور أو مرض',
+        reason: 'الذبول مع الري الكافي والجو المعتدل قد يشير لتعفن الجذور أو مرض فطري.',
+        solution: [
+          'افحص الجذور - إذا كانت بنية وطرية فهي متعفنة',
+          'اقطع الجذور التالفة بمقص معقم',
+          'أعد الزراعة في تربة جديدة معقمة',
+          'استخدم مبيد فطري خفيف إذا لزم الأمر',
+          'قلل السقي وحسن التهوية',
+        ],
+        emoji: '🔬',
+      )),
+    ],
+  ),
+
+  // ── Spots ──────────────────────────────────────────────────────
+  'spots': DiagnosisQuestion(
+    question: 'ما لون البقع على الأوراق؟',
+    options: [
+      DiagnosisOption(label: '🟤 بنية أو سوداء', nextQuestionId: 'spots_brown'),
+      DiagnosisOption(label: '⬜ بيضاء أو رمادية', result: DiagnosisResult(
+        title: 'مرض البياض الدقيقي',
+        reason: 'البقع البيضاء الطحينية هي فطر يسمى البياض الدقيقي، ينتشر في الرطوبة العالية.',
+        solution: [
+          'عزل النبتة عن النباتات الأخرى فوراً',
+          'ارش محلول من الماء + بيكربونات الصوديوم (ملعقة صغيرة لكوب ماء)',
+          'قطع الأوراق الشديدة الإصابة',
+          'حسّن تهوية المكان وقلل الرطوبة',
+          'تجنب رش الأوراق بالماء مساءً',
+        ],
+        emoji: '🍄',
+      )),
+      DiagnosisOption(label: '🟡 صفراء أو برتقالية', result: DiagnosisResult(
+        title: 'صدأ النباتات',
+        reason: 'البقع الصفراء/البرتقالية تحت الأوراق هي فطر الصدأ، يحتاج رطوبة لينتشر.',
+        solution: [
+          'اقطع الأوراق المصابة بمقص معقم وتخلص منها',
+          'لا تسقِ من فوق الأوراق، فقط التربة',
+          'استخدم مبيد فطري نحاسي',
+          'حسّن التهوية حول النبتة',
+        ],
+        emoji: '🍂',
+      )),
+    ],
+  ),
+
+  'spots_brown': DiagnosisQuestion(
+    question: 'هل البقع البنية جافة أم رطبة وطرية؟',
+    options: [
+      DiagnosisOption(label: '🌵 جافة ومقعرة', result: DiagnosisResult(
+        title: 'حروق الشمس أو نقص الماء',
+        reason: 'البقع الجافة البنية تشير لحروق الشمس المباشرة أو جفاف متكرر للنبتة.',
+        solution: [
+          'ابعد النبتة عن الشمس المباشرة في الظهيرة',
+          'انقلها لمكان بإضاءة غير مباشرة',
+          'اسقِ بانتظام أكثر',
+          'أوراق محترقة لن تتعافى، يمكن إزالتها',
+        ],
+        emoji: '☀️',
+      )),
+      DiagnosisOption(label: '💧 رطبة وطرية', result: DiagnosisResult(
+        title: 'مرض فطري بكتيري',
+        reason: 'البقع الرطبة الطرية تدل على إصابة فطرية أو بكتيرية، وتنتشر بالرطوبة.',
+        solution: [
+          'اقطع الأوراق المصابة فوراً',
+          'لا ترش الأوراق بالماء',
+          'استخدم مبيداً فطرياً من محل الزراعة',
+          'حسّن التهوية وقلل الرطوبة المحيطة',
+          'عزل النبتة عن باقي النباتات',
+        ],
+        emoji: '🧫',
+      )),
+    ],
+  ),
+
+  // ── Slow Growth ────────────────────────────────────────────────
+  'slow': DiagnosisQuestion(
+    question: 'كم عمر النبتة في نفس الأصيص؟',
+    options: [
+      DiagnosisOption(label: '📅 أكثر من سنتين', result: DiagnosisResult(
+        title: 'الجذور ملأت الأصيص',
+        reason: 'عندما تملأ الجذور الأصيص لا يبقى مكان للنمو، وتستنفد الجذور كل التربة والغذاء.',
+        solution: [
+          'انقل النبتة لأصيص أكبر بـ ٥-٧ سم',
+          'استخدم تربة جديدة وطازجة',
+          'أضف سماداً بطيء الإفراز عند إعادة الزراعة',
+          'أفضل وقت لنقل النبتة: الربيع والخريف',
+        ],
+        emoji: '🪴',
+      )),
+      DiagnosisOption(label: '🌱 أقل من سنتين', nextQuestionId: 'slow_young'),
+    ],
+  ),
+
+  'slow_young': DiagnosisQuestion(
+    question: 'هل تضيف سماداً للنبتة بانتظام؟',
+    options: [
+      DiagnosisOption(label: '❌ لا، لا أسمّد', result: DiagnosisResult(
+        title: 'نقص الغذاء',
+        reason: 'التربة تفقد عناصرها الغذائية مع الوقت، والنبتة تحتاج "وجبات" منتظمة لتنمو.',
+        solution: [
+          'أضف سماداً سائلاً متوازناً مرة في الشهر',
+          'في فصل النمو (الربيع والصيف) سمّد كل ٢-٣ أسابيع',
+          'توقف عن التسميد في الشتاء',
+          'لا تُبالغ في السماد - الزيادة ضارة',
+        ],
+        emoji: '🌿',
+      )),
+      DiagnosisOption(label: '✅ نعم، أسمّد', result: DiagnosisResult(
+        title: 'ضوء غير كافٍ',
+        reason: 'النمو البطيء مع التسميد الجيد يشير غالباً لنقص الضوء اللازم للبناء الضوئي.',
+        solution: [
+          'انقل النبتة لمكان أكثر إضاءة طبيعية',
+          'ضعها قرب نافذة تحصل على ٤-٦ ساعات ضوء يومياً',
+          'بعض النباتات تحتاج شمساً مباشرة وبعضها ضوءاً غير مباشر',
+          'ابحث عن متطلبات الضوء الخاصة بنوع نبتتك',
+        ],
+        emoji: '🌤️',
+      )),
+    ],
+  ),
+};
+}
+pubspec.yaml
